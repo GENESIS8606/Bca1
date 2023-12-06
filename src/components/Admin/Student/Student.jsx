@@ -1,8 +1,10 @@
 import { Button, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Student = () => {
+  const navigate = useNavigate();
   var [inputs, setInputs] = useState({
     Admno: "",
     Name: "",
@@ -27,12 +29,10 @@ const Student = () => {
     .catch(err=>console.log(err))
   }
 
-
-
-
-
-
-
+  const viewHandler =() =>
+  {
+    navigate('/studentview');
+  }
 
   return (
     <div>
@@ -77,6 +77,7 @@ const Student = () => {
       </Select>
       <br></br><br></br>
       <Button variant="contained" onClick={addHandler}>Submit</Button>
+      <Button variant="contained" onClick={viewHandler}>View</Button>
     </div>
   );
 };
