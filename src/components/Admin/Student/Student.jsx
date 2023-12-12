@@ -1,3 +1,4 @@
+import { Label } from "@mui/icons-material";
 import { Button, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
@@ -11,6 +12,8 @@ const Student = () => {
     Age: "",
     Course: "BCA",
   });
+   
+  var[selectedimage,setSelectedimage]=useState(null);
 
   const inputHandler = (event) => {
     const { name, value } = event.target;
@@ -18,15 +21,41 @@ const Student = () => {
     console.log(inputs);
   };
 
-  const addHandler =() =>{
-    console.log("Clicked")
+  const handleimage=(event)=>{
+    const file = event.target.files[0];
+    setSelectedimage(file)
+    console.log(file)
+    inputs.Image1=file;
+  }
 
-    console.log(inputs)
-    axios.post("http://localhost:3005/new",inputs)
-    .then((response) =>{
-      alert("Record Saved")
+  // const addHandler =() =>{
+  //   console.log("Clicked")
+
+  //   console.log(inputs)
+  //   axios.post("http://localhost:3005/new",inputs)
+  //   .then((response) =>{
+  //     alert("Record Saved")
+  //   })
+  //   .catch(err=>console.log(err))
+  // }
+  const saveData =() =>{
+    const formData=new FormData();
+    formData.append('Admno',inputs.Admno);
+    formData.append('Name',inputs.Name);
+    formData.append('Age',inputs.Age);
+    formData.append('Course',inputs.Course);
+    formData.append('Image1',selectedimage)
+
+    fetch('http://localhost:3005/new',{method:'post',body:formData})
+    .then((Response)=>Response.json())
+    .then((data)=>{
+     alert("Recode saved")
     })
-    .catch(err=>console.log(err))
+    .catch((err)=>{
+    console.log("error")
+    })
+    
+    
   }
 
   const viewHandler =() =>
@@ -70,13 +99,16 @@ const Student = () => {
         name="Course"
         value={inputs.Course}
         onChange={inputHandler}
+      
       >
         <MenuItem value={"BCA"}>BCA</MenuItem>
         <MenuItem value={"BBA"}>BBA</MenuItem>
         <MenuItem value={"MBA"}>MBA</MenuItem>
       </Select>
+<label> Choose the file to upload </label>
+<input type="file" onChange={handleimage}/>
       <br></br><br></br>
-      <Button variant="contained" onClick={addHandler}>Submit</Button>
+      <Button variant="contained" onClick={saveData}>Submit</Button>
       <Button variant="contained" onClick={viewHandler}>View</Button>
     </div>
   );
